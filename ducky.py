@@ -47,10 +47,7 @@ def possible_vals(puzzle, i, j):
     return vals
 
 def solve(puzzle):
-    """
-    Fill in blanks in puzzle and return a boolean indicating whether a
-    solution exists.
-    """
+    """ Fill in blanks in puzzle and return True if a solution exists. """
     # TODO order by most constrained variable
     for i,j in ifilter(lambda ij: not puzzle[ij], \
                        product(range(9), range(9))):
