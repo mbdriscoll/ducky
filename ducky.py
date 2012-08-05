@@ -93,7 +93,7 @@ def main():
     with Timer() as timing:
         solvable = solve(puzzle)
 
-    if not solve(puzzle):
+    if not solvable:
         print "No solution exists (took %s seconds):\n%s" % (timing, puzzle)
     else:
         assert check(puzzle)
