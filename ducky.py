@@ -17,7 +17,9 @@ $ cat p0.txt
 0 2 0  0 0 0  0 0 0
 
 $ python ducky.py --puzzle p0.txt
+...
 
+Requires numpy. Tested on Python 2.7.
 """
 
 import sys, time
