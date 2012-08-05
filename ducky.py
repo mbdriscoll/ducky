@@ -79,7 +79,7 @@ def check(answer):
 def main():
     """ Parse args, read input, call solve, print result. """
     parser = OptionParser()
-    parser.add_option("--puzzle", dest="puzzle_filename", default='puzzle.txt')
+    parser.add_option("--puzzle", dest="puzzle_filename", default='puzzle00.txt')
     (options, args) = parser.parse_args()
 
     puzzle = np.ndarray((9,9))
