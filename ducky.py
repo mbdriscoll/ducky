@@ -49,9 +49,8 @@ def solve(puzzle):
     # TODO order by most constrained variable
     for i,j in ifilter(lambda ij: not puzzle[ij], \
                        product(range(9), range(9))):
-       remaining_vals = possible_vals(puzzle, i, j)
        # TODO order by least constrained value
-       for val in remaining_vals:
+       for val in possible_vals(puzzle, i, j):
            puzzle[i,j] = val
            if solve(puzzle):
                return True # found a solution
@@ -62,12 +61,11 @@ def solve(puzzle):
 def check(answer):
     """ Return true if ANSWER is a valid solution. """
     for k in range(1,10):
-        for i in range(9): # rows
-            assert k in answer[i,:], \
-                   "%d not in row %d\n%s" % (k, i, answer)
-        for j in range(9): # columns
-            assert k in answer[:,j], \
-                   "%d not in col %d\n%s" % (k ,j, answer)
+        for m in range(9): # rows
+            assert k in answer[m,:], \
+                   "%d not in row %d\n%s" % (k, m, answer)
+            assert k in answer[:,m], \
+                   "%d not in col %d\n%s" % (k ,m, answer)
         for i,j in product([0,3,6],[0,3,6]): # blocks
             assert k in answer[i:i+3,j:j+3], \
                    "%d not in block at (%d,%d)\n%s" % (k, i, j, answer)
@@ -81,8 +79,7 @@ def main():
 
     puzzle = np.ndarray((9,9), dtype=np.int8)
     with open(options.puzzle_filename) as pfile:
-        for i in range(9):
-            puzzle[i,:] = pfile.readline().split()
+        puzzle[:,:] = map(lambda x: x.split(), pfile.readlines())
 
     print "Solving:\n%s" % puzzle
     with Timer() as timing:
