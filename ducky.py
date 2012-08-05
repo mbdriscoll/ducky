@@ -21,9 +21,11 @@ def possible_vals(puzzle, i, j):
     return vals
 
 def solve(puzzle):
+    # TODO order by most constrained variable
     for i,j in ifilter(lambda m: not puzzle[m], \
                        product(range(9), range(9))):
        remaining_vals = possible_vals(puzzle, i, j)
+       # TODO order by least constrained value
        for val in remaining_vals:
            puzzle[i,j] = val
            if solve(puzzle):
