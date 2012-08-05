@@ -1,4 +1,4 @@
-import sys
+import sys, time
 import numpy as np
 from optparse import OptionParser
 
@@ -47,12 +47,16 @@ def main():
                 puzzle[i,j] = line[j]
 
     print "Solving:\n%s" % puzzle
+    start_time = time.time()
+    solvable = solve(puzzle)
+    total_time = time.time() - start_time
+
     if not solve(puzzle):
-        print "No solution exists."
-        print puzzle
+        print "No solution exists (took %f seconds):\n%s" \
+                 % (total_time, puzzle )
     else:
         assert check(puzzle)
-        print "Answer:\n%s" % puzzle
+        print "Answer (took %f seconds):\n%s" % (total_time, puzzle)
 
 if __name__ == '__main__':
   main()
