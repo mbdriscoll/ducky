@@ -1,9 +1,32 @@
+"""
+ducky.py
+
+A soduko solver in python. Solving puzzles
+specified by the following format, where
+'0' stands for unknown value.
+
+$ cat p0.txt
+0 0 9  0 0 0  0 4 0
+0 0 2  0 0 8  0 9 7
+0 0 7  6 3 0  2 0 0
+0 0 0  0 0 6  0 0 1
+0 0 0  0 5 0  3 6 0
+0 7 0  0 0 0  0 0 0
+3 0 0  7 0 1  0 0 0
+8 1 0  0 4 3  0 0 0
+0 2 0  0 0 0  0 0 0
+
+$ python ducky.py --puzzle p0.txt
+
+"""
+
 import sys, time
 import numpy as np
 from itertools import *
 from optparse import OptionParser
 
 class Timer(object):
+    """ A context manager to time blocks of code. """
     def __enter__(self):
         self._start_time = time.time()
         return self
@@ -13,6 +36,7 @@ class Timer(object):
         return str(self._total_time)
 
 def possible_vals(puzzle, i, j):
+    """ The possible values a given variable can take. """
     bi,bj = i-(i%3),j-(j%3)
     vals = [x for x in range(1,10) \
                if x not in puzzle[i,:] \
@@ -21,8 +45,12 @@ def possible_vals(puzzle, i, j):
     return vals
 
 def solve(puzzle):
+    """
+    Fill in blanks in puzzle and return a boolean indicating whether a
+    solution exists.
+    """
     # TODO order by most constrained variable
-    for i,j in ifilter(lambda m: not puzzle[m], \
+    for i,j in ifilter(lambda ij: not puzzle[ij], \
                        product(range(9), range(9))):
        remaining_vals = possible_vals(puzzle, i, j)
        # TODO order by least constrained value
@@ -35,6 +63,7 @@ def solve(puzzle):
     return True # all spaces filled in
 
 def check(answer):
+    """ Return true if ANSWER is a valid solution. """
     for k in range(1,10):
         for i in range(9): # rows
             assert k in answer[i,:], \
@@ -48,8 +77,7 @@ def check(answer):
     return True
 
 def main():
-    print "Welcome to ducky!"
-
+    """ Parse args, read input, call solve, print result. """
     parser = OptionParser()
     parser.add_option("--puzzle", dest="puzzle_filename", default='puzzle.txt')
     (options, args) = parser.parse_args()
