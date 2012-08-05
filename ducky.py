@@ -11,6 +11,7 @@ def solve(puzzle):
                               and x not in puzzle[:,j] \
                               and x not in puzzle[i-(i%3):i-(i%3)+3, \
                                                    j-(j%3):j-(j%3)+3]]
+                possible.sort(lambda x,y: x < y)
                 for val in possible:
                     puzzle[i,j] = val
                     if solve(puzzle):
