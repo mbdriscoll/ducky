@@ -87,10 +87,7 @@ def main():
     puzzle = np.ndarray((9,9), dtype=np.int8)
     with open(options.puzzle_filename) as pfile:
         for i in range(9):
-            line = pfile.readline().split()
-            if len(line) != 9: continue
-            for j in range(9):
-                puzzle[i,j] = line[j]
+            puzzle[i,:] = pfile.readline().split()
 
     print "Solving:\n%s" % puzzle
     with Timer() as timing:
