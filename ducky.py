@@ -82,7 +82,7 @@ def main():
     parser.add_option("--puzzle", dest="puzzle_filename", default='puzzle00.txt')
     (options, args) = parser.parse_args()
 
-    puzzle = np.ndarray((9,9))
+    puzzle = np.ndarray((9,9), dtype=np.int8)
     with open(options.puzzle_filename) as pfile:
         for i in range(9):
             line = pfile.readline().split()
