@@ -1,9 +1,8 @@
 """
 ducky.py
 
-A soduko solver in python. Solving puzzles
-specified by the following format, where
-'0' stands for unknown value.
+A soduko solver in python. Solving puzzles specified by the following format,
+where '0' stands for unknown value. Requires numpy. Tested on Python 2.7.
 
 $ cat p0.txt
 0 0 9  0 0 0  0 4 0
@@ -19,7 +18,6 @@ $ cat p0.txt
 $ python ducky.py --puzzle p0.txt
 ...
 
-Requires numpy. Tested on Python 2.7.
 """
 
 import sys, time
