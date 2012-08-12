@@ -20,7 +20,7 @@ $ python ducky.py --puzzle p0.txt
 
 """
 
-import sys, time
+import sys, time, math
 import numpy as np
 from itertools import *
 from optparse import OptionParser
@@ -37,17 +37,18 @@ class Timer(object):
 
 def possible_vals(puzzle, i, j):
     """ The possible values a given variable can take. """
-    bi,bj = i-(i%3),j-(j%3)
-    vals = [x for x in range(1,10) \
+    blksz = int(math.sqrt(puzzle.shape[0]))
+    bi,bj = i-(i%blksz),j-(j%blksz)
+    vals = [x for x in range(1,puzzle.shape[0]+1) \
                if x not in puzzle[i,:] \
               and x not in puzzle[:,j] \
-              and x not in puzzle[bi:bi+3,bj:bj+3]]
+              and x not in puzzle[bi:bi+blksz,bj:bj+blksz]]
     return vals
 
 def solve(puzzle):
     """ Fill in blanks in puzzle and return True if a solution exists. """
     for i,j in ifilter(lambda ij: not puzzle[ij], \
-                       product(range(9), range(9))):
+                       product( *[range(x) for x in puzzle.shape] )):
        for val in possible_vals(puzzle, i, j):
            puzzle[i,j] = val
            if solve(puzzle):
@@ -58,14 +59,17 @@ def solve(puzzle):
 
 def check(answer):
     """ Return true if ANSWER is a valid solution. """
-    for k in range(1,10):
-        for m in range(9): # rows and columns
+    puzsz = answer.shape[0]
+    blksz = int(math.sqrt(puzsz))
+    blkbases = range(0, puzsz, blksz)
+    for k in range(1,puzsz+1):
+        for m in range(puzsz): # rows and columns
             assert k in answer[m,:], \
                    "%d not in row %d\n%s" % (k, m, answer)
             assert k in answer[:,m], \
                    "%d not in col %d\n%s" % (k, m, answer)
-        for i,j in product([0,3,6],[0,3,6]): # blocks
-            assert k in answer[i:i+3,j:j+3], \
+        for i,j in product(blkbases, blkbases): # blocks
+            assert k in answer[i:i+blksz,j:j+blksz], \
                    "%d not in block at (%d,%d)\n%s" % (k, i, j, answer)
     return True
 
@@ -75,11 +79,15 @@ def main():
     parser.add_option("--puzzle", dest="puzzle_filename", default='puzzle00.txt')
     (options, args) = parser.parse_args()
 
-    puzzle = np.ndarray((9,9), dtype=np.int8)
     with open(options.puzzle_filename) as pfile:
-        puzzle[:,:] = [x.split() for x in pfile.readlines()]
+        puzzle = np.array([x.split() for x in pfile.readlines()], dtype=np.int8)
 
-    print "Solving:\n%s" % puzzle
+    assert puzzle.shape[0] == puzzle.shape[1], \
+        "Puzzle must have same size in boths dimensions"
+    assert int(math.sqrt(puzzle.shape[0]))**2 == puzzle.shape[0], \
+        "Puzzle dimension must be a perfect square"
+
+    print "Solving puzzle:\n%s" % puzzle
     with Timer() as timing:
         solvable = solve(puzzle)
 
