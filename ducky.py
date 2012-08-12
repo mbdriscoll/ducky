@@ -83,7 +83,7 @@ def main():
     duration = time.time() - start_time
 
     if not solvable:
-        print "No solution exists (took %f seconds):\n%s" % (duration, puzzle)
+        print "No solution exists (took %f seconds)." % duration
     else:
         assert check(puzzle)
         print "Answer (took %f seconds):\n%s" % (duration, puzzle)
