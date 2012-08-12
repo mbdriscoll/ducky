@@ -25,16 +25,6 @@ import numpy as np
 from itertools import *
 from optparse import OptionParser
 
-class Timer(object):
-    """ A context manager to time blocks of code. """
-    def __enter__(self):
-        self._start_time = time.time()
-        return self
-    def __exit__(self, *args):
-        self._total_time = time.time()-self._start_time
-    def __str__(self):
-        return str(self._total_time)
-
 def possible_vals(puzzle, i, j):
     """ The possible values a given variable can take. """
     blksz = int(math.sqrt(puzzle.shape[0]))
@@ -88,14 +78,15 @@ def main():
         "Puzzle dimension must be a perfect square"
 
     print "Solving puzzle:\n%s" % puzzle
-    with Timer() as timing:
-        solvable = solve(puzzle)
+    start_time = time.time()
+    solvable = solve(puzzle)
+    duration = time.time() - start_time
 
     if not solvable:
-        print "No solution exists (took %s seconds):\n%s" % (timing, puzzle)
+        print "No solution exists (took %f seconds):\n%s" % (duration, puzzle)
     else:
         assert check(puzzle)
-        print "Answer (took %s seconds):\n%s" % (timing, puzzle)
+        print "Answer (took %f seconds):\n%s" % (duration, puzzle)
 
 if __name__ == '__main__':
   main()
