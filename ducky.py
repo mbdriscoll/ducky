@@ -1,8 +1,8 @@
 """
 ducky.py
 
-A soduko solver in python. Solving puzzles specified by the following format,
-where '0' stands for unknown value. Requires numpy. Tested on Python 2.7.
+A soduko solver in python. Solves puzzles in the following format, where '0'
+stands for unknown value. Requires numpy. Tested on Python 2.7.
 
 $ cat p0.txt
 0 0 9  0 0 0  0 4 0
@@ -46,26 +46,24 @@ def possible_vals(puzzle, i, j):
 
 def solve(puzzle):
     """ Fill in blanks in puzzle and return True if a solution exists. """
-    # TODO order by most constrained variable
     for i,j in ifilter(lambda ij: not puzzle[ij], \
                        product(range(9), range(9))):
-       # TODO order by least constrained value
        for val in possible_vals(puzzle, i, j):
            puzzle[i,j] = val
            if solve(puzzle):
                return True # found a solution
-       puzzle[i,j] = 0
+       puzzle[i,j] = 0.
        return False # no solution found
     return True # all spaces filled in
 
 def check(answer):
     """ Return true if ANSWER is a valid solution. """
     for k in range(1,10):
-        for m in range(9): # rows
+        for m in range(9): # rows and columns
             assert k in answer[m,:], \
                    "%d not in row %d\n%s" % (k, m, answer)
             assert k in answer[:,m], \
-                   "%d not in col %d\n%s" % (k ,m, answer)
+                   "%d not in col %d\n%s" % (k, m, answer)
         for i,j in product([0,3,6],[0,3,6]): # blocks
             assert k in answer[i:i+3,j:j+3], \
                    "%d not in block at (%d,%d)\n%s" % (k, i, j, answer)
@@ -79,7 +77,7 @@ def main():
 
     puzzle = np.ndarray((9,9), dtype=np.int8)
     with open(options.puzzle_filename) as pfile:
-        puzzle[:,:] = map(lambda x: x.split(), pfile.readlines())
+        puzzle[:,:] = [x.split() for x in pfile.readlines()]
 
     print "Solving:\n%s" % puzzle
     with Timer() as timing:
