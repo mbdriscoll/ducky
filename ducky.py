@@ -58,8 +58,8 @@ def check(answer):
                    "%d not in row %d\n%s" % (k, m, answer)
             assert k in answer[:,m], \
                    "%d not in col %d\n%s" % (k, m, answer)
-        for i,j in product(blkbases, blkbases): # blocks
-            assert k in answer[i:i+blksz,j:j+blksz], \
+        for bi,bj in product(blkbases, blkbases): # blocks
+            assert k in answer[bi:bi+blksz,bj:bj+blksz], \
                    "%d not in block at (%d,%d)\n%s" % (k, i, j, answer)
     return True
 
